@@ -1,3 +1,5 @@
+Note: made obsolete by ckanext-scheming 2.1 multiple_text fields
+
 ckanext-repeating
 =================
 
