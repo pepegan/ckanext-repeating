@@ -1,4 +1,5 @@
 import json
+import six
 
 from ckan.plugins.toolkit import missing, _
 
@@ -30,7 +31,7 @@ def repeating_text(key, data, errors, context):
     value = data[key]
     # 1. list of strings or 2. single string
     if value is not missing:
-        if isinstance(value, basestring):
+        if isinstance(value, six.string_types):
             value = [value]
         if not isinstance(value, list):
             errors[key].append(_('expecting list of strings'))
@@ -38,17 +39,12 @@ def repeating_text(key, data, errors, context):
 
         out = []
         for element in value:
-            if not isinstance(element, basestring):
+            if not isinstance(element, six.string_types):
                 errors[key].append(_('invalid type for repeating text: %r')
                     % element)
                 continue
             if isinstance(element, str):
-                try:
-                    element = element.decode('utf-8')
-                except UnicodeDecodeError:
-                    errors[key]. append(_('invalid encoding for "%s" value')
-                        % lang)
-                    continue
+                continue
             out.append(element)
 
         if not errors[key]:
@@ -60,7 +56,7 @@ def repeating_text(key, data, errors, context):
     prefix = key[-1] + '-'
     extras = data.get(key[:-1] + ('__extras',), {})
 
-    for name, text in extras.iteritems():
+    for name, text in extras.items():
         if not name.startswith(prefix):
             continue
         if not text:
